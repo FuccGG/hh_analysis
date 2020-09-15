@@ -21,6 +21,7 @@
     <th>Компания</th>
     <th>Адрес</th>
     <th>Требованиия</th>
+      <th> Компетенции </th>>
       <th>Ссылка</th>
   </tr>
 {% for vacancy in apidata %}
@@ -28,7 +29,10 @@
     <td>{{vacancy.vacancy_name}}</td>
     <td>{{vacancy.employer_name}}</td>
     <td>{{vacancy.address}}</td>
+      {% autoescape off %}
       <td>{{vacancy.requirements }}</td>
+      {% endautoescape %}
+      <td>{{vacancy.key_skills}}</td>
       <td><a href={{vacancy.vacancy_link}}>{{vacancy.vacancy_link}}</a></td>
   </tr>
 {% endfor %}

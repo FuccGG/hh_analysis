@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render
-from .apidata import get_api_data
+from . apidata2 import get_api_data
 
 
 def index(request):
