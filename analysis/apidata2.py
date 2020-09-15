@@ -1,5 +1,6 @@
 import urllib.parse
 import requests
+from collections import Counter
 from .levenstein import check_substring
 
 
@@ -14,6 +15,7 @@ def get_api_data():
     ids = []
     result = []
     json_data_1 = []
+    key_skills_list = []
     url1 = main_api + vacancies_url + urllib.parse.urlencode({'text': text, 'area': area2, 'per_page': per_page})
     url = main_api + vacancies_url + urllib.parse.urlencode({'text': text, 'area': area, 'per_page': per_page})
     json_data = requests.get(url).json().get('items') + requests.get(url1).json().get('items')
@@ -26,8 +28,10 @@ def get_api_data():
         json_data_1.append(requests.get(url2).json())
     for j in json_data_1:
         data = prepare_data(j)
-        result.append(data)
-    return result
+        key_skills_list.extend(data[1])
+        result.append(data[0])
+    skill_frequencies = skill_dict_to_text(dict(Counter(key_skills_list)))
+    return result, skill_frequencies
 
 
 class Vacancy:
@@ -47,14 +51,22 @@ def prepare_data(vacancy):
     requirements = vacancy['description']
     vacancy_link = vacancy['alternate_url']
     key_skills = key_skills_to_string(vacancy['key_skills'])
-    return Vacancy(vacancy_name, employer_name, address, requirements, vacancy_link, key_skills)
+    return Vacancy(vacancy_name, employer_name, address, requirements, vacancy_link, key_skills[0]), key_skills[1]
 
 
 def key_skills_to_string(key_skills):
     result = ''
+    skill_list = []
     for skill in key_skills:
         result += skill['name'] + ' '
+        skill_list.append(skill['name'])
+    return result, skill_list
+
+
+def skill_dict_to_text(dictionary):
+    result = ''
+    for item in dictionary:
+        result += '<li>' + item + ' - ' + str(dictionary[item]) + '</li>'
     return result
 
-#def get_skill_list(json_data):
 
