@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>HHANALYSIS</title>
+    <link href="{% static 'css/index.css'%}" rel="stylesheet" />
+    <style type="text/css">
+   TD, TH {
+    border: 1px solid #333;
+   }
+  </style>
+</head>
+<body>
+
+{% block content %}
+
+<table>
+  <tr>
+    <th>Назание вакансии</th>
+    <th>Компания</th>
+    <th>Адрес</th>
+    <th>Требованиия</th>
+      <th>Ссылка</th>
+  </tr>
+{% for vacancy in apidata %}
+  <tr>
+    <td>{{vacancy.vacancy_name}}</td>
+    <td>{{vacancy.employer_name}}</td>
+    <td>{{vacancy.address}}</td>
+      <td>{{vacancy.requirements }}</td>
+      <td><a href={{vacancy.vacancy_link}}>{{vacancy.vacancy_link}}</a></td>
+  </tr>
+{% endfor %}
+</table>
+{% endblock %}
+</body>
+</html>
