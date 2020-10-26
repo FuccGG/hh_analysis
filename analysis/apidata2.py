@@ -2,6 +2,9 @@ import urllib.parse
 import requests
 from collections import Counter
 from .levenstein import check_substring
+import copy
+import operator
+#from .models import Vacancy
 
 
 def get_api_data():
@@ -30,9 +33,12 @@ def get_api_data():
         data = prepare_data(j)
         key_skills_list.extend(data[1])
         result.append(data[0])
-    skill_frequencies = skill_dict_to_text(dict(Counter(key_skills_list)))
+    skill_frequencies = skill_dict_to_text(sort_skill_dict_by_value(dict(Counter(key_skills_list))))
     return result, skill_frequencies
 
+
+def sort_skill_dict_by_value(skill_dict):
+    return {k: v for k, v in sorted(skill_dict.items(), key=lambda item: item[1], reverse=True)}
 
 class Vacancy:
     def __init__(self, vacancy_name, employer_name, address, requirements, vacancy_link, key_skills):
@@ -50,11 +56,11 @@ def prepare_data(vacancy):
     address = vacancy['area']['name']
     requirements = vacancy['description']
     vacancy_link = vacancy['alternate_url']
-    key_skills = key_skills_to_string(vacancy['key_skills'])
+    key_skills = copy.copy(key_skills_string_and_list(vacancy['key_skills']))
     return Vacancy(vacancy_name, employer_name, address, requirements, vacancy_link, key_skills[0]), key_skills[1]
 
 
-def key_skills_to_string(key_skills):
+def key_skills_string_and_list(key_skills):
     result = ''
     skill_list = []
     for skill in key_skills:

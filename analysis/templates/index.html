@@ -37,7 +37,7 @@
       <td><a href={{vacancy.vacancy_link}}>{{vacancy.vacancy_link}}</a></td>
       {% if forloop.first %}
           {% autoescape off %}
-          <td rowspan="200" valign="top" align="left" >{{frequencies}}</td>
+      <td rowspan="200" valign="top" align="left" ><ol>{{frequencies}}</ol></td>
           {% endautoescape %}
       {% endif %}
   </tr>
